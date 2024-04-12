@@ -12,7 +12,7 @@ function addTeamView(id, name, score){
   var button_template = $("<div class = col-md-2></div>");
   var increase_button = $("<button class = increase-button>+</button>");
   $(increase_button).click(function(){
-    increase_score(id, score, score_template, team_template, button_template);
+    increase_score(id);
   });
   name_template.text(name);
   score_template.text(score);
@@ -23,7 +23,7 @@ function addTeamView(id, name, score){
   $("#teams").append(team_template);
 }
 
-function increase_score(id, score, score_template, team_template, button_template){
+function increase_score(id){
   var team_id = {"id": id}
   $.ajax({
     type: "POST",
@@ -32,14 +32,12 @@ function increase_score(id, score, score_template, team_template, button_templat
     contentType: "application/json; charset=utf-8",
     data : JSON.stringify(team_id),
     success: function(data, status, request){
-      score = data.scoreboard[id - 1].score;
       console.log("Success");
       console.log(request)
       console.log(status)
-      console.log(score);
-      score_template.text(score);
-      team_template.append(score_template);
-      team_template.append(button_template);
+      $(document).ready(function(){
+        display_scoreboard(data.scoreboard);
+      })
     },
     error: function(request, status, error){
         console.log("Error");
